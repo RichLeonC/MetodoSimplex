@@ -1,0 +1,31 @@
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">Modelaje</h2>
+
+        <div class="row">
+            <div class="col-md-3">
+                <h3>Función Objetivo</h3>
+            </div>
+        </div>
+        <form [formGroup]="formModelaje">
+            <div formArrayName="variables">
+                <div class="row" 
+                *ngFor="let variable of formModelaje.get('variables')?.value;
+                index as i">
+                    <div class="col-md-3">
+                        <label class="form-label">x{{i+1}}</label>
+                        <input type="number" class="form-control" >
+                    </div>
+                </div>
+            </div>
+
+        </form>
+        <div class="row">
+            <div class="col-md-3">
+                <h4>{{formModelaje.get("objetivo")?.value}}</h4>
+
+            </div>
+        </div>
+    </div>
+
+</div>

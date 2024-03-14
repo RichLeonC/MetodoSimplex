@@ -1,7 +1,54 @@
-<div class="container">
-  <div class>
-    <h1>Calculadora Metodo Simplex</h1>
+<div class="container text-center" style="margin-top: 100px;">
+  <div class="row">
+    <h1>Calculadora Método Simplex</h1>
   </div>
+  <form class="needs-validation row justify-content-center mt-5" (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
+
+    <div class="col-md-3">
+      <label class="form-label" for="objetivo">Objetivo</label>
+      <div class="input-group has-validation">
+        <select class="form-select form-select-lg" id="objetivo" name="objetivo" formControlName="objetivo"
+          [class.is-invalid]="form.get('objetivo')?.invalid && form.get('objetivo')?.touched">
+          <option value="max">Maximizar</option>
+          <option value="min">Minimizar</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="form.get('objetivo')?.invalid && form.get('objetivo')?.touched">
+          Debe seleccionar una opción
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label" for="variables">Cantidad de variables</label>
+      <div class="input-group has-validation">
+        <input type="number" class="form-control form-control-lg" id="variables" name="variables" placeholder="variables"
+          formControlName="variables" [class.is-invalid]="form.get('variables')?.invalid && form.get('variables')?.touched">
+        <div class="invalid-feedback" *ngIf="form.get('variables')?.invalid && form.get('variables')?.touched">
+          Debe ingresar un número
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="restricciones">Cantidad de restricciones</label>
+      <div class="input-group has-validation">
+        <input type="number" class="form-control form-control-lg" id="restricciones" name="restricciones" placeholder="restricciones"
+          formControlName="restricciones" [class.is-invalid]="form.get('restricciones')?.invalid && form.get('restricciones')?.touched">
+        <div class="invalid-feedback" *ngIf="form.get('restricciones')?.invalid && form.get('restricciones')?.touched">
+          Debe ingresar un número
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row col-md-4 justify-content-center mt-5">
+      <button type="submit" class="btn btn-primary btn-lg">Calcular</button>
+    </div>
+    
+  </form>
+
+  <div class="mt-5" *ngIf="isSubmitted">
+    <app-modelaje [formInicial]="form"></app-modelaje>
+  </div>
+
 </div>
-
-

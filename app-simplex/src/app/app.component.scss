@@ -1,7 +1,60 @@
-h1{
-    font-size: 2.6rem;
-    font-weight:bolder;
-    color: hsl(205, 20%, 94%);
+.form-control{
+    background-color: #11191f;
+    border-color: #374956;
+    color: #e1e6eb;
+    box-shadow: none;
+    font-size: 1.3rem;
+    padding: 1.5rem;
+    text-align: center;
 
 }
 
+.form-control:focus{
+    background-color: #11191f;
+    border-color: hsl(195, 85%, 41%);
+    color: #e1e6eb;
+    box-shadow: none;
+}
+
+.form-control::placeholder{
+    color: #e1e6eb;
+    opacity: 0.5;
+}
+
+.form-select{
+    background-color: #11191f;
+    border-color: #374956;
+    color: #e1e6eb;
+    box-shadow: none;
+    font-size: 1.3rem;
+    padding: 1.5rem;
+    text-align: center;
+
+}
+
+.form-select:focus{
+    background-color: #11191f;
+    border-color: hsl(195, 85%, 41%);
+    color: #e1e6eb;
+    box-shadow: none;
+}
+
+.form-label{
+    color: #e1e6eb;
+    font-size: 1.5rem;
+
+}
+
+.btn-primary{
+    background-color: rgb(16, 149, 193);
+    border-color: hsl(195, 85%, 41%);
+    color: #e1e6eb;
+    font-size: 1.5rem;
+    text-align: center;
+    transition: background-color 0.3s ease;
+
+}
+
+.btn-primary:hover{
+    background-color: hsl(195, 85%, 55%);
+}
