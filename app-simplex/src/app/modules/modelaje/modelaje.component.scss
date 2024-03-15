@@ -1,24 +1,59 @@
-h2{
-    color:black
+h2 {
+    color: black;
+    font-weight: bold;
 }
 
-h3{
-    color:#e1e6eb;
-    opacity:0.9;
+h3 {
+    color: #e1e6eb;
+    opacity: 0.9;
 }
 
-h4{
-    color:#e1e6eb;
-    opacity:0.7;
+h4 {
+    color: #e1e6eb;
+    opacity: 0.7;
 
 }
 
-.card{
+.card {
     border: none;
-    background-color: hsl(206, 29%, 30%);
+    background-color: hsl(206, 29%, 15%);
     // box-shadow: 0 5px 20px 0 rgba(16, 149, 193, 0.8);
 }
 
-.card-title{
+.card-title {
     color: #e1e6eb;
+}
+
+.form-control {
+    background-color: #11191f;
+    border-color: hsl(195, 85%, 20%);
+    color: #e1e6eb;
+    box-shadow: none;
+    text-align: center;
+}
+
+.form-control:focus {
+    border-color: hsl(195, 85%, 41%);
+}
+
+.form-control::placeholder {
+    color: #e1e6eb;
+    opacity: 0.5;
+}
+
+.form-label {
+    color: #e1e6eb;
+    font-size: 1.3rem;
+    margin-left: 0.5rem;
+}
+
+.list-group-item {
+    background-color: hsl(206, 29%, 15%);
+     border-color: black;
+     border-width: 0.2rem;
+     border-top: none;
+     border-left: none;
+     border-right: none;
+    color: #e1e6eb;
+    text-align: center;
 }

@@ -2,30 +2,52 @@
     <div class="card-body">
         <h2 class="card-title">Modelaje</h2>
 
-        <div class="row">
-            <div class="col-md-3">
-                <h3>Función Objetivo</h3>
-            </div>
-        </div>
+
+
         <form [formGroup]="formModelaje">
-            <div formArrayName="variables">
-                <div class="row" 
-                *ngFor="let variable of formModelaje.get('variables')?.value;
-                index as i">
-                    <div class="col-md-3">
-                        <label class="form-label">x{{i+1}}</label>
-                        <input type="number" class="form-control" >
+            <ul class="list-group mt-3">
+                <li class="list-group-item mb-3">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h3>Función Objetivo</h3>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    <div class="row mt-4">
+                        <div class="col-sm-2" style="margin-top: 0.2rem;">
+                            <h4>{{objetivo}} Z = </h4>
+
+                        </div>
+                        <div class="col-sm-2 mb-2 d-flex align-items-center" *ngFor="let variable of variables; let i = index;let isLast = last">
+                            <input type="number" class="form-control" [(ngModel)]="variable.multiplicador">
+                            <label class="form-label">x<sub>{{i+1}}</sub></label>
+                            <label class="form-label" *ngIf="!isLast"> +</label>
+
+                        </div>
+                    </div>
+                </li>
+                <!-- <li class="list-group-item">
+                    <div class="row mt-2 align-items-center">
+                        <div class="col-md-3">
+                            <h3 style="margin-right: 3rem;">Restricciones</h3>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-sm-2 mb-2 d-flex align-items-center" *ngFor="let restriccion of getRestricciones().controls;
+                        let i = index;let isLast = last">
+                            <input type="number" class="form-control">
+                            <label class="form-label">x<sub>{{i+1}}</sub></label>
+                            <label class="form-label" *ngIf="!isLast"> +</label>
+
+                        </div>
+                    </div>
+                </li> -->
+            </ul>
+
 
         </form>
-        <div class="row">
-            <div class="col-md-3">
-                <h4>{{formModelaje.get("objetivo")?.value}}</h4>
-
-            </div>
-        </div>
     </div>
 
 </div>
+
+<br>
+<br>
