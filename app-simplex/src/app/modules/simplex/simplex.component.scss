@@ -1,0 +1,25 @@
+h2 {
+    color: black;
+    font-weight: bold;
+}
+
+h3 {
+    color: #e1e6eb;
+    opacity: 0.9;
+}
+
+h4 {
+    color: #e1e6eb;
+    opacity: 0.7;
+
+}
+
+.card {
+    border: none;
+    background-color: hsl(206, 29%, 15%);
+    // box-shadow: 0 5px 20px 0 rgba(16, 149, 193, 0.8);
+}
+
+.card-title {
+    color: #e1e6eb;
+}

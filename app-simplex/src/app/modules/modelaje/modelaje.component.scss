@@ -41,6 +41,20 @@ h4 {
     opacity: 0.5;
 }
 
+.form-select{
+    background-color: #11191f;
+    border-color: hsl(195, 85%, 20%);
+    color: #e1e6eb;
+    box-shadow: none;
+    text-align: center;
+    font-size: large;
+
+}
+
+.form-select:focus {
+    border-color: hsl(195, 85%, 41%);
+}
+
 .form-label {
     color: #e1e6eb;
     font-size: 1.3rem;
@@ -56,4 +70,20 @@ h4 {
      border-right: none;
     color: #e1e6eb;
     text-align: center;
+}
+
+.btn-primary{
+    background-color: rgb(16, 149, 193);
+    border-color: hsl(195, 85%, 41%);
+    color: #e1e6eb;
+    font-size: 1.5rem;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    justify-content: center;
+
+
+}
+
+.btn-primary:hover{
+    background-color: hsl(195, 85%, 55%);
 }

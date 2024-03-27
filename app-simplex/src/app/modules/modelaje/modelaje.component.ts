@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { get } from 'http';
 import { Variable } from '../../modelos/variable.model';
 import { Restricion } from '../../modelos/restriccion.model';
+import { SimplexComponent } from '../simplex/simplex.component';
 
 @Component({
   selector: 'app-modelaje',
   standalone: true,
-  imports: [ReactiveFormsModule,CommonModule,FormsModule],
+  imports: [ReactiveFormsModule,CommonModule,FormsModule,SimplexComponent],
   templateUrl: './modelaje.component.html',
   styleUrl: './modelaje.component.scss'
 })
@@ -20,6 +21,7 @@ export class ModelajeComponent implements OnInit{
   variables: Array<Variable> = [];
   restricciones: Array<Restricion> = [];
   objetivo: string = '';
+  modelajeAprobado = false;
 
   constructor(private fb: FormBuilder) {
     this.formModelaje = this.fb.group({});
@@ -37,6 +39,27 @@ export class ModelajeComponent implements OnInit{
   addVariable() {
     this.getVariables().push(this.fb.control(''));
   }
+
+  onSubmit() {
+    this.variables.forEach((variable) => {
+      if(variable.multiplicador === null){
+        variable.multiplicador = 0;
+      }
+    });
+    this.restricciones.forEach((restriccion) => {
+      restriccion.valores.forEach((variable) => {
+        if(variable.multiplicador === null){
+          variable.multiplicador = 0;
+        }
+        if(restriccion.resultado === null){
+          restriccion.resultado = 0;
+        }
+      });
+    });
+    this.modelajeAprobado = true;
+    // console.log(this.variables);
+    // console.log(this.restricciones);
+  }
  
 
   ngOnInit() {
@@ -45,28 +68,15 @@ export class ModelajeComponent implements OnInit{
     this.objetivo = this.formInicial.get('objetivo')?.value;
 
     for(let i = 0; i < nVariables; i++){
-      this.variables.push(new Variable('x' + i, 0, 0));
+      this.variables.push(new Variable('x' + (i+1), 0, null));
     }
+
 
     for(let i = 0; i < nRestricciones; i++){
-      this.restricciones.push(new Restricion(i, this.variables, '>=', 0));
+      let variablesCopia = JSON.parse(JSON.stringify(this.variables)); //Copia de las variables
+      this.restricciones.push(new Restricion(i, variablesCopia, '<=', null,new Variable('s'+(nVariables+i+1),1,0)));
     }
 
-
-
-    // const fObjetivoCampos = Array(variables).fill(0).map(() => this.fb.control(''));
-    // const nnRestricciones = Array(restricciones).fill(0).map(() => this.fb.control(''));
-    // this.formModelaje = this.fb.group({
-    //   fObjetivo: this.fb.array(fObjetivoCampos),
-    //   restricciones: this.fb.array(nRestricciones),
-    //   objetivo: this.fb.control(objetivo)
-
-    // });
-
-
-
-    console.log(this.variables[0].id);
-    console.log(this.restricciones);
 
   }
 }
