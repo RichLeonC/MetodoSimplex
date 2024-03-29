@@ -1,12 +1,12 @@
 import { Component,OnInit,Input } from '@angular/core';
 import { Variable } from '../../modelos/variable.model';
 import { Restricion } from '../../modelos/restriccion.model';
-import { Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-simplex',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './simplex.component.html',
   styleUrl: './simplex.component.scss'
 })
@@ -19,6 +19,8 @@ export class SimplexComponent implements OnInit{
   variableEntrante:string = '';
   variableSaliente:string = '';
   matrix:number[][] = [];
+  z:number = 0;
+  resultados: Array<number> = [];
   constructor() {
     this.variables = [];
     this.restricciones = [];
@@ -124,23 +126,86 @@ export class SimplexComponent implements OnInit{
     
   }
 
-  ngOnInit() {
-    console.log('SimplexComponent');
+  conviertePivoteEnUno(){
+    this.idFilas[this.idFilas.indexOf(this.variableSaliente)] = this.variableEntrante;
+    console.log("Nuevas filas: "+this.idFilas);
+    let fila = this.idFilas.indexOf(this.variableEntrante);
+    let pivote = this.matrix[fila][this.idColumnas.indexOf(this.variableEntrante)];
+    let inversoPivote = 1/pivote;
+    for(let i = 0;i<this.matrix[fila].length;i++){
+      this.matrix[fila][i] = +(this.matrix[fila][i]*inversoPivote).toPrecision(3);
+    }
+  }
 
+  convierteRestoEnCero(){
+    let fila = this.idFilas.indexOf(this.variableEntrante);
+    let columna = this.idColumnas.indexOf(this.variableEntrante);
+    for(let i = 0;i<this.matrix.length;i++){
+      if(i !== fila){
+        let factor = this.matrix[i][columna]*-1;
+        for(let j = 0;j<this.matrix[i].length;j++){ 
+          this.matrix[i][j] = +(this.matrix[i][j] + (this.matrix[fila][j]*factor)).toPrecision(3); 
+        }
+      }
+    }
+  
+  }
+
+  hayNegativos(){
+    let hayNegativos = false;
+    for(let i = 0;i<this.matrix[0].length;i++){
+      if(this.matrix[0][i]<0){
+        hayNegativos = true;
+        break;
+      }
+    }
+    return hayNegativos;
+  
+  }
+
+  simplex(){
     this.llenarTablaIds();
-    
-
     console.log('Matrix Inicial');
     this.matrix = this.matrixInicial();
-    console.log(this.idFilas);
-    console.log(this.idColumnas);
-    console.log(this.matrix);
 
-    console.log('Variable Entrante');
-    this.elementoMenor();
-    console.log(this.variableEntrante);
-    this.radioMenor();
-    console.log('Variable Saliente');
-    console.log(this.variableSaliente);
+    while(this.hayNegativos()){
+     // console.log('Variable Entrante');
+      this.elementoMenor();
+     // console.log(this.variableEntrante);
+      this.radioMenor();
+     // console.log('Variable Saliente');
+     // console.log(this.variableSaliente);
+
+      this.conviertePivoteEnUno();
+     // console.log('Matrix con pivote en 1');
+     // console.log(this.matrix);
+     // console.log('Convierte resto en 0');
+      this.convierteRestoEnCero();
+     // console.log(this.matrix);
+    }
+
+    console.log('Matrix resultante');
+    console.log(this.matrix);
+    this.solucionOptima();
+    
+  }
+
+  solucionOptima(){
+    let ultimaColumna = this.variables.length + this.restricciones.length + 1; 
+    let totalFilas = this.restricciones.length + 1;
+    for(let i = 0;i<totalFilas;i++){
+      let rhs = this.matrix[i][ultimaColumna-1];
+      this.resultados.push(rhs);  
+    }
+    console.log('columnas');
+    console.log(this.idColumnas);
+    console.log('Variables');
+    console.log(this.idFilas);
+    console.log('Resultados');
+    console.log(this.resultados);
+  }
+
+  ngOnInit() {
+    this.simplex();
   }
 }

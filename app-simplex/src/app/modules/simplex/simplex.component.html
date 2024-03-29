@@ -1,6 +1,24 @@
 <div class="card">
     <div class="card-body">
         <h2 class="card-title">Simplex</h2>
-    </div>
+        <ul class="list-group mt-3">
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h3>Resultados</h3>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-2 mb-2">
+                        <h4>Z = {{resultados[0]}}</h4>
+                    </div>
+                    <div class="col-sm-2 mb-2" *ngFor="col of idColumnas; let i = index;let isLast = last">
+                        <h4 *ngIf="idFilas.indexOf(idColumnas[i])!==-1 && !isLast"> {{idColumnas[i]}} = {{resultados[idFilas.indexOf(idColumnas[i])]}}*</h4>
+                        <h4 *ngIf="idFilas.indexOf(idColumnas[i])===-1  && !isLast"> {{idColumnas[i]}} = 0</h4>
+
+                    </div>
+                </div>
+            </li>
+        </ul>
 
 </div>
