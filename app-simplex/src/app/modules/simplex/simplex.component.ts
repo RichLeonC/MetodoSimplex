@@ -21,6 +21,10 @@ export class SimplexComponent implements OnInit{
   matrix:number[][] = [];
   z:number = 0;
   resultados: Array<number> = [];
+  inicialMatrix: number[][] = [];
+  iteraciones: Array<number[][]> = [];
+  idFilasInicial: Array<string> = [];
+  idFilasIteraciones: Array<Array<string>> = [];
   constructor() {
     this.variables = [];
     this.restricciones = [];
@@ -76,6 +80,7 @@ export class SimplexComponent implements OnInit{
         this.idFilas.push(this.restricciones[i-1].holgura?.id||'');
       }
     }
+    this.idFilasInicial = JSON.parse(JSON.stringify(this.idFilas));
 
     let holguras = 0;
     for(let i = 0;i<totalColumnas;i++){
@@ -128,7 +133,7 @@ export class SimplexComponent implements OnInit{
 
   conviertePivoteEnUno(){
     this.idFilas[this.idFilas.indexOf(this.variableSaliente)] = this.variableEntrante;
-    console.log("Nuevas filas: "+this.idFilas);
+    this.idFilasIteraciones.push(JSON.parse(JSON.stringify(this.idFilas)));
     let fila = this.idFilas.indexOf(this.variableEntrante);
     let pivote = this.matrix[fila][this.idColumnas.indexOf(this.variableEntrante)];
     let inversoPivote = 1/pivote;
@@ -148,6 +153,7 @@ export class SimplexComponent implements OnInit{
         }
       }
     }
+    this.iteraciones.push(JSON.parse(JSON.stringify(this.matrix)));
   
   }
 
@@ -165,27 +171,21 @@ export class SimplexComponent implements OnInit{
 
   simplex(){
     this.llenarTablaIds();
-    console.log('Matrix Inicial');
     this.matrix = this.matrixInicial();
+    this.inicialMatrix = JSON.parse(JSON.stringify(this.matrix));
 
     while(this.hayNegativos()){
-     // console.log('Variable Entrante');
       this.elementoMenor();
-     // console.log(this.variableEntrante);
       this.radioMenor();
-     // console.log('Variable Saliente');
-     // console.log(this.variableSaliente);
-
       this.conviertePivoteEnUno();
-     // console.log('Matrix con pivote en 1');
-     // console.log(this.matrix);
-     // console.log('Convierte resto en 0');
       this.convierteRestoEnCero();
-     // console.log(this.matrix);
+   
     }
 
     console.log('Matrix resultante');
     console.log(this.matrix);
+    console.log('Inicial');
+    console.log(this.inicialMatrix);
     this.solucionOptima();
     
   }
@@ -197,12 +197,6 @@ export class SimplexComponent implements OnInit{
       let rhs = this.matrix[i][ultimaColumna-1];
       this.resultados.push(rhs);  
     }
-    console.log('columnas');
-    console.log(this.idColumnas);
-    console.log('Variables');
-    console.log(this.idFilas);
-    console.log('Resultados');
-    console.log(this.resultados);
   }
 
   ngOnInit() {

@@ -10,7 +10,7 @@ h3 {
 
 h4 {
     color: #e1e6eb;
-    opacity: 0.7;
+    opacity: 0.8;
 
 }
 
@@ -39,4 +39,14 @@ p{
      border-right: none;
     color: #e1e6eb;
     text-align: center;
+}
+
+.table{
+    background-color: hsl(206, 29%, 15%) !important;
+    color: #e1e6eb;
+}
+
+div.table{
+    background-color: hsl(206, 29%, 15%) !important;
+    color: #e1e6eb;
 }
