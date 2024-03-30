@@ -11,6 +11,7 @@ import { ModelajeComponent } from './modules/modelaje/modelaje.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit{
+  key = 0;
   constructor(private fb: FormBuilder) {}
 
   form = this.fb.group({
@@ -26,6 +27,7 @@ export class AppComponent implements OnInit{
     if(this.form.valid){
       console.log(this.form.value);
       this.isSubmitted = true;
+      this.key++;
     }
     else{
       

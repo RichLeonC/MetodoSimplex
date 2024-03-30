@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card" *ngIf="!modelajeAprobado">
     <div class="card-body">
         <h2 class="card-title">Modelaje</h2>
 
@@ -17,7 +17,7 @@
                             <h4>{{objetivo}} Z = </h4>
 
                         </div>
-                        <div class="col-sm-2 mb-2 d-flex align-items-center"
+                        <div class="col-sm-2 col-6 mb-2 d-flex align-items-center"
                             *ngFor="let variable of variables; let i = index;let isLast = last">
                             <input type="number" class="form-control" [(ngModel)]="variable.multiplicador"
                                 name="variable{{i}}" placeholder="0" value="0">
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="row mt-4">
-                        <div class="col-sm-2 mb-2 d-flex align-items-center"
+                        <div class="col-sm-2 col-6 mb-2 d-flex align-items-center"
                             *ngFor="let valor of restriccion.valores; let j = index;let isLast = last">
                             <input type="number" class="form-control" [(ngModel)]="valor.multiplicador"
                                 name="restriccion{{j}}" placeholder="0" value="0">
@@ -43,14 +43,14 @@
                             <label class="form-label" *ngIf="!isLast"> +</label>
 
                         </div>
-                        <div class="col-sm-1 mb-2 d-flex align-items-center">
+                        <div class="col-4 col-sm-1 mb-2 d-flex align-items-center">
                             <select class="form-select" [(ngModel)]="restriccion.operador" name="operador{{i}}">
                                 <option value="<=">&#8804;</option>
                                 <option value=">=">&#8805;</option>
                                 <option value="=">=</option>
                             </select>
                         </div>
-                        <div class="col-sm-2 mb-2 d-flex align-items-center">
+                        <div class="col-sm-2 col-6 mb-2 d-flex align-items-center">
                             <input type="number" class="form-control" [(ngModel)]="restriccion.resultado"
                                 name="resultado{{i}}" placeholder="0" value="0">
                         </div>
@@ -79,7 +79,7 @@
             </ul>
 
             <div class="row mt-3 justify-content-center">
-                <button type="submit" class="btn btn-primary btn-lg col-4">Calcular</button>
+                <button type="submit" class="btn btn-primary btn-lg col-6 col-md-4">Calcular</button>
             </div>
         </form>
     </div>
@@ -88,7 +88,7 @@
 
 
 
-<div class="mt-5" *ngIf="modelajeAprobado">
+<div class="mt-5" *ngIf="modelajeAprobado" [@fadeIn]>
     <app-simplex [variables]="variables" [restricciones]="restricciones" [objetivo]="objetivo"></app-simplex>
 </div>
 

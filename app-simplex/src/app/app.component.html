@@ -5,7 +5,7 @@
   <form class="needs-validation row justify-content-center mt-5" (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
 
     <div class="col-md-3">
-      <label class="form-label" for="objetivo">Objetivo</label>
+      <label class="form-label" for="objetivo">Objetivo del problema</label>
       <div class="input-group has-validation">
         <select class="form-select form-select-lg" id="objetivo" name="objetivo" formControlName="objetivo"
           [class.is-invalid]="form.get('objetivo')?.invalid && form.get('objetivo')?.touched">
@@ -48,7 +48,10 @@
   </form>
 
   <div class="mt-5" *ngIf="isSubmitted">
-    <app-modelaje [formInicial]="form"></app-modelaje>
+    <ng-container *ngFor="let k of[{key:key}]|keyvalue">
+      <app-modelaje [formInicial]="form"></app-modelaje>
+    </ng-container>
+   
   </div>
 
 </div>

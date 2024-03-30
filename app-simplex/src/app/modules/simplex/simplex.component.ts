@@ -2,13 +2,24 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Variable } from '../../modelos/variable.model';
 import { Restricion } from '../../modelos/restriccion.model';
 import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-simplex',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './simplex.component.html',
-  styleUrl: './simplex.component.scss'
+  styleUrl: './simplex.component.scss',
+  animations: [
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('500ms', style({ opacity: 1 })),
+      ]),
+    ]),
+  ],
 })
 export class SimplexComponent implements OnInit {
   @Input() variables: Array<Variable> = [];
@@ -19,12 +30,13 @@ export class SimplexComponent implements OnInit {
   variableEntrante: string = '';
   variableSaliente: string = '';
   matrix: number[][] = [];
-  //z:number = 0;
   resultados: Array<number> = [];
   inicialMatrix: number[][] = [];
   iteraciones: Array<number[][]> = [];
   idFilasInicial: Array<string> = [];
   idFilasIteraciones: Array<Array<string>> = [];
+  entrantes: Array<string> = [];
+  salientes: Array<string> = [];
 
   hayInfinidad = false;
   constructor() {
@@ -108,6 +120,7 @@ export class SimplexComponent implements OnInit {
 
       }
     }
+    this.entrantes.push(this.variableEntrante);
   }
 
   columnaNegativa(columna: number, totalFilas: number): boolean {
@@ -146,10 +159,10 @@ export class SimplexComponent implements OnInit {
 
       }
       this.variableSaliente = this.idFilas[filaRadioMenor];
+      this.salientes.push(this.variableSaliente);
     }
     else {
       this.hayInfinidad = true;
-      console.log('Hay infinidad de soluciones');
     }
 
 

@@ -6,6 +6,7 @@ import { Variable } from '../../modelos/variable.model';
 import { Restricion } from '../../modelos/restriccion.model';
 import { SimplexComponent } from '../simplex/simplex.component';
 
+
 @Component({
   selector: 'app-modelaje',
   standalone: true,
