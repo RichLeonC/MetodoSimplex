@@ -262,19 +262,59 @@ export class SimplexComponent implements OnInit {
 
   dosFases() {
     this.llenarTablaIds(true);
-    console.log(this.idFilas);
-    console.log(this.idColumnas);
+    this.matrix = this.matrixFase1();
+    this.inicialMatrix = JSON.parse(JSON.stringify(this.matrix));
+
    // this.fase1();
 
   }
 
-  matrixFase1() {
+  matrixFase1(): number[][]{
     let totalFilas = this.restricciones.length + 2; // +2 por la fila de la función objetivo y la fila W
     let totalColumnas = this.variables.length + this.restricciones.length + this.nArtificiales + 1; // +1 por la columna de resultados (RHS)
     let matrix = [];
 
+    for(let i = 0; i < totalFilas; i++){
+      let fila = [];
+      for(let j=0; j < totalColumnas; j++){
+        if(i===0 && j<this.variables.length+this.restricciones.length){//Fila -W
+          fila.push(0);
+        }
+        else if(i===0 && j>=this.variables.length+this.restricciones.length && j<totalColumnas-1){//Fila -W, variables Artificiales
+          fila.push(1);
+        }
+        else if(i===0){// Fila -W, RHS
+          fila.push(0);
+        }
+        else if(i===1 && j<this.variables.length){//Fila Z
+          let negativo = (this.variables[j].multiplicador || 0) * -1;
+          fila.push(negativo);
+        }
+        else if(i===1 && j>=this.variables.length && j<totalColumnas){//Fila Z, variables de holgura, artificiales y RHS
+          fila.push(0);
+        }
+        else if(i>1 && j<this.variables.length){//variables de las Restricciones
+          fila.push(this.restricciones[i-2].valores[j].multiplicador || 0);
+        }
+        else if(i>1 && j === this.variables.length + (i-2)){//variables de holgura
+          fila.push(this.restricciones[i-2].holgura?.valor || 0);
+        }
+        else if(i>1 && this.idFilas[i] === this.idColumnas[j]){//variables artificiales
+          //fila.push(this.restricciones[i-2].artificial?.valor || 0);
+          fila.push(1);
+        }
+        else if(i>1 && j === totalColumnas-1){//RHS
+          fila.push(this.restricciones[i-2].resultado || 0);
+        }
+        else{
+          fila.push(0);
+        }
 
+      }
+      matrix.push(fila);
+    }
 
+    return matrix;
 
   }
 
