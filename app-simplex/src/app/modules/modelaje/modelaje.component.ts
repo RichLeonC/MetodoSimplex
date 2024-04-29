@@ -23,6 +23,7 @@ export class ModelajeComponent implements OnInit{
   restricciones: Array<Restricion> = [];
   objetivo: string = '';
   modelajeAprobado = false;
+  metodo: string = '';
 
   constructor(private fb: FormBuilder) {
     this.formModelaje = this.fb.group({});
@@ -48,6 +49,17 @@ export class ModelajeComponent implements OnInit{
       }
     });
     this.restricciones.forEach((restriccion) => {
+      if(restriccion.operador === '<='){
+        restriccion.holgura = new Variable('s'+(this.variables.length+restriccion.id+1),1,0);
+      }
+      else if(restriccion.operador === '>='){
+        restriccion.holgura = new Variable('s'+(this.restricciones.length+restriccion.id+1),1,0);
+        restriccion.artificial = new Variable('a'+(restriccion.id+1),1,0);
+
+      }
+      else{
+        restriccion.artificial = new Variable('a'+(restriccion.id+1),1,0);
+      }
       restriccion.valores.forEach((variable) => {
         if(variable.multiplicador === null){
           variable.multiplicador = 0;
@@ -57,9 +69,9 @@ export class ModelajeComponent implements OnInit{
         }
       });
     });
-    this.modelajeAprobado = true;
-    // console.log(this.variables);
     // console.log(this.restricciones);
+    this.modelajeAprobado = true;
+
   }
  
 
@@ -67,6 +79,7 @@ export class ModelajeComponent implements OnInit{
     const nVariables = this.formInicial.get('variables')?.value;
     const nRestricciones = this.formInicial.get('restricciones')?.value;
     this.objetivo = this.formInicial.get('objetivo')?.value;
+    this.metodo = this.formInicial.get('metodo')?.value;
 
     for(let i = 0; i < nVariables; i++){
       this.variables.push(new Variable('x' + (i+1), 0, null));
@@ -75,7 +88,8 @@ export class ModelajeComponent implements OnInit{
 
     for(let i = 0; i < nRestricciones; i++){
       let variablesCopia = JSON.parse(JSON.stringify(this.variables)); //Copia de las variables
-      this.restricciones.push(new Restricion(i, variablesCopia, '<=', null,new Variable('s'+(nVariables+i+1),1,0)));
+        // this.restricciones.push(new Restricion(i, variablesCopia, '<=', null,new Variable('s'+(nVariables+i+1),1,0)));
+        this.restricciones.push(new Restricion(i, variablesCopia, '<=', null,null,null));
     }
 
 

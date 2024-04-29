@@ -25,6 +25,7 @@ export class SimplexComponent implements OnInit {
   @Input() variables: Array<Variable> = [];
   @Input() restricciones: Array<Restricion>;
   @Input() objetivo: string;
+  @Input() metodo: string;
   idFilas: Array<string> = [];
   idColumnas: Array<string> = [];
   variableEntrante: string = '';
@@ -43,6 +44,7 @@ export class SimplexComponent implements OnInit {
     this.variables = [];
     this.restricciones = [];
     this.objetivo = '';
+    this.metodo = '';
 
   }
 
@@ -216,7 +218,7 @@ export class SimplexComponent implements OnInit {
     while (this.hayNegativos()) {
       this.elementoMenor();
       this.radioMenor();
-      if(this.hayInfinidad) break;
+      if (this.hayInfinidad) break;
       this.conviertePivoteEnUno();
       this.convierteRestoEnCero();
 
@@ -235,7 +237,41 @@ export class SimplexComponent implements OnInit {
     }
   }
 
+  dosFases() {
+    this.fase1();
+
+  }
+
+  fase1() {
+    
+  }
+
+  granM() {
+
+  }
+
   ngOnInit() {
-    this.simplex();
+    let hayArtificiales = false;
+    this.restricciones.forEach(e => {
+      if (e.artificial != null) {
+        hayArtificiales = true;
+
+      };
+    });
+
+    if (!hayArtificiales && this.metodo === 'Fases') {
+      this.simplex();
+    }
+    if (!hayArtificiales && this.metodo === 'M') {
+
+    }
+    if (hayArtificiales && this.metodo === 'Fases') {
+      this.dosFases();
+    }
+    if (hayArtificiales && this.metodo === 'M') {
+      this.granM();
+    }
+
+
   }
 }

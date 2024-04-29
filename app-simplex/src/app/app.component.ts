@@ -15,6 +15,7 @@ export class AppComponent implements OnInit{
   constructor(private fb: FormBuilder) {}
 
   form = this.fb.group({
+    metodo: ['', Validators.required],
     objetivo: ['', Validators.required],
     variables: ['', Validators.required],
     restricciones: ['', Validators.required]

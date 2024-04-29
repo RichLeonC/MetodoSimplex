@@ -5,6 +5,20 @@
   <form class="needs-validation row justify-content-center mt-5" (ngSubmit)="onSubmit()" [formGroup]="form" novalidate>
 
     <div class="col-md-3">
+      <label class="form-label" for="metodo">Método</label>
+      <div class="input-group has-validation">
+        <select class="form-select form-select-lg" id="metodo" name="metodo" formControlName="metodo"
+          [class.is-invalid]="form.get('metodo')?.invalid && form.get('metodo')?.touched">
+          <option value="Fases">Dos Fases</option>
+          <option value="M">Gran M</option>
+        </select>
+        <div class="invalid-feedback" *ngIf="form.get('metodo')?.invalid && form.get('metodo')?.touched">
+          Debe seleccionar una opción
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
       <label class="form-label" for="objetivo">Objetivo del problema</label>
       <div class="input-group has-validation">
         <select class="form-select form-select-lg" id="objetivo" name="objetivo" formControlName="objetivo"
