@@ -40,6 +40,8 @@ export class SimplexComponent implements OnInit {
   salientes: Array<string> = [];
 
   hayInfinidad = false;
+
+  nArtificiales = 0;
   constructor() {
     this.variables = [];
     this.restricciones = [];
@@ -85,12 +87,27 @@ export class SimplexComponent implements OnInit {
 
   }
 
-  llenarTablaIds() {
+  llenarTablaIds(esDosFases: boolean) {
     let totalColumnas = this.variables.length + this.restricciones.length + 1;
-    for (let i = 0; i < this.restricciones.length + 1; i++) {
-      if (i === 0) {
+    let totalFilas = this.restricciones.length + 1;
+    if(esDosFases){
+      totalFilas += 1;
+      totalColumnas += this.nArtificiales;
+    } 
+
+    for (let i = 0; i < totalFilas; i++) {
+      if (i === 0 && !esDosFases) {
         this.idFilas.push('z');
 
+      }
+      else if (i === 0 && esDosFases) {
+        this.idFilas.push('-w');
+      }
+      else if(i===1 && esDosFases){
+        this.idFilas.push('z');
+      }
+      else if (esDosFases) {
+        this.idFilas.push(this.restricciones[i - 2].artificial?.id || this.restricciones[i - 2].holgura?.id || '');
       }
       else {
         this.idFilas.push(this.restricciones[i - 1].holgura?.id || '');
@@ -99,6 +116,7 @@ export class SimplexComponent implements OnInit {
     this.idFilasInicial = JSON.parse(JSON.stringify(this.idFilas));
 
     let holguras = 0;
+    let artificiales = 0;
     for (let i = 0; i < totalColumnas; i++) {
       if (i < this.variables.length) {
         this.idColumnas.push(this.variables[i].id || '');
@@ -106,10 +124,15 @@ export class SimplexComponent implements OnInit {
       else if (i === totalColumnas - 1) {
         this.idColumnas.push('RHS');
       }
-      else {
+      else if(i >= this.variables.length && i < this.variables.length + this.restricciones.length){ //variables de holgura
         this.idColumnas.push(this.restricciones[holguras].holgura?.id || '');
         holguras++;
       }
+      else if(i >= this.variables.length + this.restricciones.length && i < totalColumnas - 1){ //variables artificiales
+        this.idColumnas.push(this.restricciones[artificiales].artificial?.id || '');
+        artificiales++;
+      }
+
     }
   }
 
@@ -211,7 +234,7 @@ export class SimplexComponent implements OnInit {
 
 
   simplex() {
-    this.llenarTablaIds();
+    this.llenarTablaIds(false);
     this.matrix = this.matrixInicial();
     this.inicialMatrix = JSON.parse(JSON.stringify(this.matrix));
 
@@ -238,12 +261,25 @@ export class SimplexComponent implements OnInit {
   }
 
   dosFases() {
-    this.fase1();
+    this.llenarTablaIds(true);
+    console.log(this.idFilas);
+    console.log(this.idColumnas);
+   // this.fase1();
+
+  }
+
+  matrixFase1() {
+    let totalFilas = this.restricciones.length + 2; // +2 por la fila de la función objetivo y la fila W
+    let totalColumnas = this.variables.length + this.restricciones.length + this.nArtificiales + 1; // +1 por la columna de resultados (RHS)
+    let matrix = [];
+
+
+
 
   }
 
   fase1() {
-    
+
   }
 
   granM() {
@@ -254,6 +290,7 @@ export class SimplexComponent implements OnInit {
     let hayArtificiales = false;
     this.restricciones.forEach(e => {
       if (e.artificial != null) {
+        this.nArtificiales++;
         hayArtificiales = true;
 
       };

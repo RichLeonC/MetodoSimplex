@@ -53,7 +53,7 @@ export class ModelajeComponent implements OnInit{
         restriccion.holgura = new Variable('s'+(this.variables.length+restriccion.id+1),1,0);
       }
       else if(restriccion.operador === '>='){
-        restriccion.holgura = new Variable('s'+(this.restricciones.length+restriccion.id+1),1,0);
+        restriccion.holgura = new Variable('s'+(this.variables.length+restriccion.id+1),1,0);
         restriccion.artificial = new Variable('a'+(restriccion.id+1),1,0);
 
       }
@@ -69,7 +69,7 @@ export class ModelajeComponent implements OnInit{
         }
       });
     });
-    // console.log(this.restricciones);
+     console.log(this.restricciones);
     this.modelajeAprobado = true;
 
   }
