@@ -56,14 +56,15 @@
                 </div>
             </li>
 
+
             <li class="list-group-item mb-3" *ngFor="let it of iteraciones;let i = index">
                 <div class="row" style="margin-right: 4.5rem;">
                     <div class="col-md-3">
                         <h3>Iteración {{i+1}}:</h3>
                        
                     </div>
-                    <div class="col-md-3" *ngIf="comenzoConvertir0Artificiales">
-                        <p>Entró {{entrantes[i]}}, salió {{salientes[i]}}</p>
+                    <div class="col-md-3" *ngIf="!comenzoConvertir0Artificiales">
+                        <p>Entró {{entrantes[i-nArtificiales]}}, salió {{salientes[i-nArtificiales]}}</p>
                     </div>
                 </div>
                 <div class="row mt-4 table-responsive">

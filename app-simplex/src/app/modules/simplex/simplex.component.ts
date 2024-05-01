@@ -182,15 +182,22 @@ export class SimplexComponent implements OnInit {
 
   }
 
-  radioMenor() {
+  radioMenor(esDosFases: boolean = false) {
+    let index = 1;
+    let totalFilas = this.restricciones.length + 1;
+    if (esDosFases && this.comenzoFase1) {
+      index = 2;
+      totalFilas += 1;
+    }
     let radioMenor = 0;
     let esPrimero = true;
     let columnaMenor = this.idColumnas.indexOf(this.variableEntrante);
-    let totalFilas = this.restricciones.length + 1;
+
+
     let filaRadioMenor = 0;
 
     if (!this.columnaNegativa(columnaMenor, totalFilas)) {
-      for (let i = 1; i < totalFilas; i++) {
+      for (let i = index; i < totalFilas; i++) {
         if (this.matrix[i][columnaMenor] > 0) {
           let rhs = this.matrix[i][this.matrix[i].length - 1];
           let ele = this.matrix[i][columnaMenor];
@@ -233,7 +240,12 @@ export class SimplexComponent implements OnInit {
         let factor = this.matrix[i][columna] * -1;
         for (let j = 0; j < this.matrix[i].length; j++) {
           this.matrix[i][j] = +(this.matrix[i][j] + (this.matrix[fila][j] * factor)).toPrecision(3);
+
+          if (Math.abs(this.matrix[i][j]) < 0.01) {
+            this.matrix[i][j] = 0;
+          }
         }
+
       }
     }
     this.iteraciones.push(JSON.parse(JSON.stringify(this.matrix)));
@@ -302,11 +314,7 @@ export class SimplexComponent implements OnInit {
         if (i === 0 && !this.idColumnas[j].includes('s') && !this.idColumnas[j].includes('a')) {//Fila -W
           fila.push(0);
         }
-        // else if(i===0 && j>=this.variables.length+this.restricciones.length && j<totalColumnas-1 && this.nHolguras>0){//Fila -W, variables Artificiales con Holguras
-        //   fila.push(1);
-        // }
         else if (i === 0 && this.idColumnas[j].includes('a')) {//Fila -W, variables Artificiales sin Holguras
-          console.log("entro");
           fila.push(1);
         }
         else if (i === 0) {// Fila -W, RHS
@@ -345,37 +353,51 @@ export class SimplexComponent implements OnInit {
   }
 
   fase1() {
-    // while(this.hayArtificiales()){
-    //   //Necesito convertir en 0 los elementos de la fila 0 que no sean 0
-
-    // }
     this.convierteArtificalesEnCero();
     this.comenzoConvertir0Artificiales = false;
-    console.log(this.matrix);
+    while (this.hayNegativos()) {
+      this.elementoMenor();
+      this.radioMenor(true);
+      if (this.hayInfinidad) break;
+      this.conviertePivoteEnUno();
+      this.convierteRestoEnCero();
 
+
+    }
+
+
+    if (!this.hayInfinidad) {
+      if (this.esFactible()) {
+        this.fase2();
+      }
+    }
+
+  }
+
+  fase2() {
+    console.log("Fase 2");
+  }
+
+  esFactible(): boolean {
+    let factible = true;
+    this.idFilas.forEach(e => {
+      if (e.includes('a')) {
+        factible = false;
+      }
+    });
+    return factible;
   }
 
   convierteArtificalesEnCero() {
     this.comenzoConvertir0Artificiales = true;
     for (let i = 0; i < this.nArtificiales; i++) {
-      let index = this.variables.length + this.restricciones.length + i;
+      let index = this.variables.length + this.nHolguras + i;
       this.variableEntrante = this.idColumnas[index];
       this.idFilasIteraciones.push(JSON.parse(JSON.stringify(this.idFilas)));
       this.convierteRestoEnCero();
     }
 
   }
-
-  hayArtificiales() {
-    let hayArtificiales = false;
-    this.idColumnas.forEach(e => {
-      if (e.includes('a')) {
-        hayArtificiales = true;
-      }
-    });
-    return hayArtificiales;
-  }
-
 
   granM() {
 
