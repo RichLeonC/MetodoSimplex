@@ -260,7 +260,8 @@ export class SimplexComponent implements OnInit {
 
   hayNegativos() {
     let hayNegativos = false;
-    for (let i = 0; i < this.matrix[0].length; i++) {
+
+    for (let i = 0; i < this.matrix[0].length-1; i++) {
       if (this.matrix[0][i] < 0) {
         hayNegativos = true;
         break;
@@ -398,6 +399,7 @@ export class SimplexComponent implements OnInit {
     this.iteraciones.push(JSON.parse(JSON.stringify(this.matrix)));
 
     while (this.hayNegativos()) {
+      console.log('Hay negativos')
       this.elementoMenor();
       this.radioMenor();
       if (this.hayInfinidad) break;
