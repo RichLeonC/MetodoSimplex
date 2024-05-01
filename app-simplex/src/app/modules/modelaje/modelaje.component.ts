@@ -25,6 +25,9 @@ export class ModelajeComponent implements OnInit{
   modelajeAprobado = false;
   metodo: string = '';
 
+  contador = 1;
+  contadorArtificiales = 1;
+
   constructor(private fb: FormBuilder) {
     this.formModelaje = this.fb.group({});
   }
@@ -50,15 +53,18 @@ export class ModelajeComponent implements OnInit{
     });
     this.restricciones.forEach((restriccion) => {
       if(restriccion.operador === '<='){
-        restriccion.holgura = new Variable('s'+(this.variables.length+restriccion.id+1),1,0);
+        restriccion.holgura = new Variable('s'+(this.contador),1,0);
+        this.contador++;
       }
       else if(restriccion.operador === '>='){
-        restriccion.holgura = new Variable('s'+(this.variables.length+restriccion.id+1),-1,0);
-        restriccion.artificial = new Variable('a'+(restriccion.id+1),1,0);
+        restriccion.holgura = new Variable('s'+(this.contador),-1,0);
+        this.contador++;
+        restriccion.artificial = new Variable('a'+(this.contadorArtificiales),1,0);
+        this.contadorArtificiales++;
 
       }
       else{
-        restriccion.artificial = new Variable('a'+(restriccion.id+1),1,0);
+        restriccion.artificial = new Variable('a'+(this.contadorArtificiales),1,0);
       }
       restriccion.valores.forEach((variable) => {
         if(variable.multiplicador === null){
@@ -83,6 +89,7 @@ export class ModelajeComponent implements OnInit{
 
     for(let i = 0; i < nVariables; i++){
       this.variables.push(new Variable('x' + (i+1), 0, null));
+      this.contador++;
     }
 
 
