@@ -36,6 +36,7 @@ export class SimplexComponent implements OnInit {
   iteraciones: Array<number[][]> = [];
   idFilasInicial: Array<string> = [];
   idFilasIteraciones: Array<Array<string>> = [];
+  idColumnasIteraciones: Array<Array<string>> = [];
   entrantes: Array<string> = [];
   salientes: Array<string> = [];
 
@@ -229,6 +230,7 @@ export class SimplexComponent implements OnInit {
   conviertePivoteEnUno() {
     this.idFilas[this.idFilas.indexOf(this.variableSaliente)] = this.variableEntrante;
     this.idFilasIteraciones.push(JSON.parse(JSON.stringify(this.idFilas)));
+    this.idColumnasIteraciones.push(JSON.parse(JSON.stringify(this.idColumnas)));
     let fila = this.idFilas.indexOf(this.variableEntrante);
     let pivote = this.matrix[fila][this.idColumnas.indexOf(this.variableEntrante)];
     let inversoPivote = 1 / pivote;
@@ -395,6 +397,10 @@ export class SimplexComponent implements OnInit {
 
     this.idColumnasFase2 = this.idColumnasFase2.filter(e => !e.includes('a'));
 
+    this.idFilasIteraciones.push(JSON.parse(JSON.stringify(this.idFilasFase2)));
+    this.idColumnasIteraciones.push(JSON.parse(JSON.stringify(this.idColumnasFase2)));
+    this.iteraciones.push(JSON.parse(JSON.stringify(this.matrixFase2)));
+
     
   }
 
@@ -414,6 +420,7 @@ export class SimplexComponent implements OnInit {
       let index = this.variables.length + this.nHolguras + i;
       this.variableEntrante = this.idColumnas[index];
       this.idFilasIteraciones.push(JSON.parse(JSON.stringify(this.idFilas)));
+      this.idColumnasIteraciones.push(JSON.parse(JSON.stringify(this.idColumnas)));
       this.convierteRestoEnCero();
     }
 
