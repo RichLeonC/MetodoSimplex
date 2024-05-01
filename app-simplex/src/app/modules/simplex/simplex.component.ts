@@ -49,9 +49,6 @@ export class SimplexComponent implements OnInit {
   comenzarFase2 = false;
   comenzoConvertir0Artificiales = false;
 
-  matrixFase2: number[][] = [];
-  idFilasFase2: Array<string> = [];
-  idColumnasFase2: Array<string> = [];
   constructor() {
     this.variables = [];
     this.restricciones = [];
@@ -385,21 +382,20 @@ export class SimplexComponent implements OnInit {
     console.log("Fase 2");
     this.comenzoFase1 = false;
     this.comenzarFase2 = true;
-    this.idFilasFase2 = JSON.parse(JSON.stringify(this.idFilas));
-    this.idColumnasFase2 = JSON.parse(JSON.stringify(this.idColumnas));
-    this.matrixFase2 = JSON.parse(JSON.stringify(this.matrix));
-    this.matrixFase2.splice(0, 1); //Elimina la fila -W
-    this.idFilasFase2.splice(0, 1); //Elimina la fila -W
+    this.matrix.splice(0, 1); //Elimina la fila -W
+    this.idFilas.splice(0, 1); //Elimina la fila -W
 
-    this.matrixFase2 = this.matrixFase2.map(f => {
-      return f.filter((_, i) => !this.idColumnasFase2[i].includes('a'));
+    this.matrix = this.matrix.map(f => {
+      return f.filter((_, i) => !this.idColumnas[i].includes('a'));
     });
 
-    this.idColumnasFase2 = this.idColumnasFase2.filter(e => !e.includes('a'));
+    this.idColumnas = this.idColumnas.filter(e => !e.includes('a'));
 
-    this.idFilasIteraciones.push(JSON.parse(JSON.stringify(this.idFilasFase2)));
-    this.idColumnasIteraciones.push(JSON.parse(JSON.stringify(this.idColumnasFase2)));
-    this.iteraciones.push(JSON.parse(JSON.stringify(this.matrixFase2)));
+    this.idFilasIteraciones.push(JSON.parse(JSON.stringify(this.idFilas)));
+    this.idColumnasIteraciones.push(JSON.parse(JSON.stringify(this.idColumnas)));
+    this.iteraciones.push(JSON.parse(JSON.stringify(this.matrix)));
+
+
 
     
   }
