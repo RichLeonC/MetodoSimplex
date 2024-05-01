@@ -28,10 +28,10 @@
 
             <li class="list-group-item mb-3">
                 <div class="row">
-                    <div class="col-md-3" *ngIf="!comenzoFase1 && !comenzarFase2">
+                    <div class="col-md-3" *ngIf="!comenzoFase1">
                         <h3>Matriz Inicial</h3>
                     </div>
-                    <div class="col-md-3" *ngIf="comenzoFase1 && !comenzarFase2">
+                    <div class="col-md-3" *ngIf="comenzoFase1">
                         <h3>Fase 1: Matriz Inicial</h3>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                             <tr>
                                 <th scope="col">i</th>
                                 <th scope="col">BVS</th>
-                                <th scope="col" *ngFor="let col of idColumnas">{{col}}</th>
+                                <th scope="col" *ngFor="let col of idColumnasInicial">{{col}}</th>
                             </tr>
                         </thead>
                         <tbody>

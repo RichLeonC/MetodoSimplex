@@ -35,6 +35,7 @@ export class SimplexComponent implements OnInit {
   inicialMatrix: number[][] = [];
   iteraciones: Array<number[][]> = [];
   idFilasInicial: Array<string> = [];
+  idColumnasInicial: Array<string> = [];
   idFilasIteraciones: Array<Array<string>> = [];
   idColumnasIteraciones: Array<Array<string>> = [];
   entrantes: Array<string> = [];
@@ -133,6 +134,7 @@ export class SimplexComponent implements OnInit {
     this.llenarHolguras();
     this.llenarArtificiales();
     this.idColumnas.push('RHS');
+    this.idColumnasInicial = JSON.parse(JSON.stringify(this.idColumnas));
   }
 
   llenarHolguras() {
@@ -395,7 +397,15 @@ export class SimplexComponent implements OnInit {
     this.idColumnasIteraciones.push(JSON.parse(JSON.stringify(this.idColumnas)));
     this.iteraciones.push(JSON.parse(JSON.stringify(this.matrix)));
 
+    while (this.hayNegativos()) {
+      this.elementoMenor();
+      this.radioMenor();
+      if (this.hayInfinidad) break;
+      this.conviertePivoteEnUno();
+      this.convierteRestoEnCero();
 
+    }
+    if (!this.hayInfinidad) this.solucionOptima();
 
     
   }
