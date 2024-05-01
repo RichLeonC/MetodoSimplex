@@ -96,13 +96,9 @@ export class SimplexComponent implements OnInit {
   llenarTablaIds(esDosFases: boolean) {
     let totalColumnas = this.variables.length + this.nHolguras + this.nArtificiales + 1;
     let totalFilas = this.restricciones.length + 1;
-    if(esDosFases){
+    if (esDosFases) {
       totalFilas += 1;
-      
-      // totalColumnas += this.nHolguras; 
-    } 
-
-    console.log('totalColumnas: '+totalColumnas);
+    }
 
     for (let i = 0; i < totalFilas; i++) {
       if (i === 0 && !esDosFases) {
@@ -112,7 +108,7 @@ export class SimplexComponent implements OnInit {
       else if (i === 0 && esDosFases) {
         this.idFilas.push('-w');
       }
-      else if(i===1 && esDosFases){
+      else if (i === 1 && esDosFases) {
         this.idFilas.push('z');
       }
       else if (esDosFases) {
@@ -123,7 +119,6 @@ export class SimplexComponent implements OnInit {
       }
     }
     this.idFilasInicial = JSON.parse(JSON.stringify(this.idFilas));
-    console.log("idFilas: "+this.idFilas);
 
     for (let i = 0; i < totalColumnas; i++) {
 
@@ -135,27 +130,26 @@ export class SimplexComponent implements OnInit {
     this.llenarHolguras();
     this.llenarArtificiales();
     this.idColumnas.push('RHS');
-    console.log(this.idColumnas);
   }
 
   llenarHolguras() {
-    for(let i = this.variables.length; i < this.variables.length+this.nHolguras; i++){
-      for(let j = 0; j < this.restricciones.length; j++){
-        if(this.restricciones[j].holgura?.id !== undefined ){
-          if(!this.idColumnas.includes(this.restricciones[j].holgura?.id??''))
+    for (let i = this.variables.length; i < this.variables.length + this.nHolguras; i++) {
+      for (let j = 0; j < this.restricciones.length; j++) {
+        if (this.restricciones[j].holgura?.id !== undefined) {
+          if (!this.idColumnas.includes(this.restricciones[j].holgura?.id ?? ''))
             this.idColumnas.push(this.restricciones[j].holgura?.id ?? '');
         }
       }
 
     }
-  } 
+  }
 
   llenarArtificiales() {
     let comienzoArt = this.variables.length + this.nHolguras;
-    for(let i = comienzoArt; i < comienzoArt + this.nArtificiales; i++){
-      for(let j = 0; j < this.restricciones.length; j++){
-        if(this.restricciones[j].artificial?.id !== undefined ){
-          if(!this.idColumnas.includes(this.restricciones[j].artificial?.id??''))
+    for (let i = comienzoArt; i < comienzoArt + this.nArtificiales; i++) {
+      for (let j = 0; j < this.restricciones.length; j++) {
+        if (this.restricciones[j].artificial?.id !== undefined) {
+          if (!this.idColumnas.includes(this.restricciones[j].artificial?.id ?? ''))
             this.idColumnas.push(this.restricciones[j].artificial?.id ?? '');
         }
       }
@@ -296,52 +290,49 @@ export class SimplexComponent implements OnInit {
 
   }
 
-  matrixFase1(): number[][]{
+  matrixFase1(): number[][] {
     let totalFilas = this.restricciones.length + 2; // +2 por la fila de la función objetivo y la fila W
-    let totalColumnas = this.variables.length + this.restricciones.length + 1; // +1 por la columna de resultados (RHS)
-
-    if(this.nHolguras>0){
-      totalColumnas += this.nHolguras;
-    }
+    let totalColumnas = this.variables.length + this.nHolguras + this.nArtificiales + 1; // +1 por la columna de resultados (RHS)
     let matrix = [];
-    for(let i = 0; i < totalFilas; i++){
+    console.log(this.idColumnas);
+    for (let i = 0; i < totalFilas; i++) {
       let fila = [];
-      for(let j=0; j < totalColumnas; j++){
+      for (let j = 0; j < totalColumnas; j++) {
 
-        if(i===0 && !this.idColumnas[j].includes('s') && !this.idColumnas[j].includes('a')){//Fila -W
+        if (i === 0 && !this.idColumnas[j].includes('s') && !this.idColumnas[j].includes('a')) {//Fila -W
           fila.push(0);
         }
         // else if(i===0 && j>=this.variables.length+this.restricciones.length && j<totalColumnas-1 && this.nHolguras>0){//Fila -W, variables Artificiales con Holguras
         //   fila.push(1);
         // }
-        else if(i===0 && this.idColumnas[j].includes('a')){//Fila -W, variables Artificiales sin Holguras
+        else if (i === 0 && this.idColumnas[j].includes('a')) {//Fila -W, variables Artificiales sin Holguras
           console.log("entro");
           fila.push(1);
         }
-        else if(i===0){// Fila -W, RHS
+        else if (i === 0) {// Fila -W, RHS
           fila.push(0);
         }
-        else if(i===1 && j<this.variables.length){//Fila Z
+        else if (i === 1 && j < this.variables.length) {//Fila Z
           let negativo = (this.variables[j].multiplicador || 0) * -1;
           fila.push(negativo);
         }
-        else if(i===1 && j>=this.variables.length && j<totalColumnas){//Fila Z, variables de holgura, artificiales y RHS
+        else if (i === 1 && j >= this.variables.length && j < totalColumnas) {//Fila Z, variables de holgura, artificiales y RHS
           fila.push(0);
         }
-        else if(i>1 && j<this.variables.length){//variables de las Restricciones
-          fila.push(this.restricciones[i-2].valores[j].multiplicador || 0);
+        else if (i > 1 && j < this.variables.length) {//variables de las Restricciones
+          fila.push(this.restricciones[i - 2].valores[j].multiplicador || 0);
         }
-        else if(i>1 && j === this.variables.length + (i-2) && this.nHolguras>0){//variables de holgura
-          fila.push(this.restricciones[i-2].holgura?.valor || 0);
+        else if (i > 1 && j === this.variables.length + (i - 2) && this.nHolguras > 0) {//variables de holgura
+          fila.push(this.restricciones[i - 2].holgura?.valor || 0);
         }
-        else if(i>1 && this.idFilas[i] === this.idColumnas[j]){//variables artificiales
+        else if (i > 1 && this.idFilas[i] === this.idColumnas[j]) {//variables artificiales
           //fila.push(this.restricciones[i-2].artificial?.valor || 0);
           fila.push(1);
         }
-        else if(i>1 && j === totalColumnas-1){//RHS
-          fila.push(this.restricciones[i-2].resultado || 0);
+        else if (i > 1 && j === totalColumnas - 1) {//RHS
+          fila.push(this.restricciones[i - 2].resultado || 0);
         }
-        else{
+        else {
           fila.push(0);
         }
 
@@ -356,17 +347,17 @@ export class SimplexComponent implements OnInit {
   fase1() {
     // while(this.hayArtificiales()){
     //   //Necesito convertir en 0 los elementos de la fila 0 que no sean 0
-      
+
     // }
     this.convierteArtificalesEnCero();
     this.comenzoConvertir0Artificiales = false;
     console.log(this.matrix);
-    
+
   }
 
-  convierteArtificalesEnCero(){
+  convierteArtificalesEnCero() {
     this.comenzoConvertir0Artificiales = true;
-    for(let i =0;i<this.nArtificiales;i++){
+    for (let i = 0; i < this.nArtificiales; i++) {
       let index = this.variables.length + this.restricciones.length + i;
       this.variableEntrante = this.idColumnas[index];
       this.idFilasIteraciones.push(JSON.parse(JSON.stringify(this.idFilas)));
@@ -384,7 +375,7 @@ export class SimplexComponent implements OnInit {
     });
     return hayArtificiales;
   }
-  
+
 
   granM() {
 
@@ -398,7 +389,7 @@ export class SimplexComponent implements OnInit {
         hayArtificiales = true;
 
       };
-      if(e.holgura != null) this.nHolguras++;
+      if (e.holgura != null) this.nHolguras++;
     });
 
     if (!hayArtificiales && this.metodo === 'Fases') {
