@@ -175,7 +175,7 @@ export class SimplexComponent implements OnInit {
 
   elementoMenor() { //Encuentra el elemento menor de la fila 0
     let menor = 0;
-    for (let i = 0; i < this.matrix[0].length; i++) {
+    for (let i = 0; i < this.matrix[0].length-1; i++) {
       if (this.matrix[0][i] < menor) {
         menor = this.matrix[0][i];
         this.variableEntrante = this.idColumnas[i];
@@ -340,9 +340,13 @@ export class SimplexComponent implements OnInit {
         else if (i === 0) {// Fila -W, RHS
           fila.push(0);
         }
-        else if (i === 1 && j < this.variables.length) {//Fila Z
+        else if (i === 1 && j < this.variables.length && this.objetivo === 'max') {//Fila Z
           let negativo = (this.variables[j].multiplicador || 0) * -1;
           fila.push(negativo);
+        }
+        else if (i === 1 && j < this.variables.length && this.objetivo === 'min') {//Fila Z
+          let valor = (this.variables[j].multiplicador || 0) ;
+          fila.push(valor);
         }
         else if (i === 1 && j >= this.variables.length && j < totalColumnas) {//Fila Z, variables de holgura, artificiales y RHS
           fila.push(0);
