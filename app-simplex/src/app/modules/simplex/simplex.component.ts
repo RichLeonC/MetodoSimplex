@@ -47,7 +47,7 @@ export class SimplexComponent implements OnInit {
   nHolguras = 0;
 
   comenzoFase1 = false;
-  comenzarFase2 = false;
+  esFase1 = false;
   comenzoConvertir0Artificiales = false;
 
   mensajes: Array<string> = [];
@@ -361,6 +361,7 @@ export class SimplexComponent implements OnInit {
   }
 
   fase1() {
+    this.esFase1 = true;
     this.convierteArtificalesEnCero();
     this.comenzoConvertir0Artificiales = false;
     while (this.hayNegativos()) {
@@ -385,7 +386,6 @@ export class SimplexComponent implements OnInit {
   fase2() {
     this.mensajes.push('Fase 2');
     this.comenzoFase1 = false;
-    this.comenzarFase2 = true;
     this.matrix.splice(0, 1); //Elimina la fila -W
     this.idFilas.splice(0, 1); //Elimina la fila -W
 
