@@ -8,7 +8,7 @@
                         <h3>Solucion óptima</h3>
                     </div>
                 </div>
-                <div class="row mt-4" *ngIf="!hayInfinidad">
+                <div class="row mt-4" *ngIf="!hayInfinidad && !esInfactible">
                     <div class="col-sm-2 mb-2">
                         <h4>Z = {{resultados[0]}}</h4>
                     </div>
@@ -19,14 +19,14 @@
 
                     </div>
                 </div>
-                <div class="row mt-4" *ngIf="hayInfinidad">
+                <div class="row mt-4" *ngIf="hayInfinidad && !esInfactible">
                     <div class="col-sm-12 mb-2">
                         <h4>El problema tiene solución no acotada (infinita)</h4>
                     </div>
                 </div>
-                <div class="row mt-4" *ngIf="!esFactible">
+                <div class="row mt-4" *ngIf="esInfactible">
                     <div class="col-sm-12 mb-2">
-                        <h4>No se puede avanzar, se terminó la Fase 1 y aún existen variables artificiales. Problema infactible</h4>
+                        <h4>No se puede avanzar, se terminó la Fase 1 y aún existen variables artificiales. Problema No Factible</h4>
                     </div>
                 </div>
             </li>

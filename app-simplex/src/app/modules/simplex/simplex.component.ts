@@ -395,6 +395,7 @@ export class SimplexComponent implements OnInit {
         this.fase2();
       }
       else {
+        console.log('No es factible');
         this.esInfactible = true;
       }
     }
