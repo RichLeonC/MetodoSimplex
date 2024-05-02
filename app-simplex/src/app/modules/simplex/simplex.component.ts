@@ -50,6 +50,8 @@ export class SimplexComponent implements OnInit {
   comenzarFase2 = false;
   comenzoConvertir0Artificiales = false;
 
+  mensajes: Array<string> = [];
+
   constructor() {
     this.variables = [];
     this.restricciones = [];
@@ -255,6 +257,7 @@ export class SimplexComponent implements OnInit {
       }
     }
     this.iteraciones.push(JSON.parse(JSON.stringify(this.matrix)));
+    this.mensajes.push('');
 
   }
 
@@ -313,7 +316,6 @@ export class SimplexComponent implements OnInit {
     let totalFilas = this.restricciones.length + 2; // +2 por la fila de la función objetivo y la fila W
     let totalColumnas = this.variables.length + this.nHolguras + this.nArtificiales + 1; // +1 por la columna de resultados (RHS)
     let matrix = [];
-    console.log(this.idColumnas);
     for (let i = 0; i < totalFilas; i++) {
       let fila = [];
       for (let j = 0; j < totalColumnas; j++) {
@@ -341,7 +343,6 @@ export class SimplexComponent implements OnInit {
           fila.push(this.restricciones[i - 2].holgura?.valor || 0);
         }
         else if (i > 1 && this.idFilas[i] === this.idColumnas[j]) {//variables artificiales
-          //fila.push(this.restricciones[i-2].artificial?.valor || 0);
           fila.push(1);
         }
         else if (i > 1 && j === totalColumnas - 1) {//RHS
@@ -382,7 +383,7 @@ export class SimplexComponent implements OnInit {
   }
 
   fase2() {
-    console.log("Fase 2");
+    this.mensajes.push('Fase 2');
     this.comenzoFase1 = false;
     this.comenzarFase2 = true;
     this.matrix.splice(0, 1); //Elimina la fila -W
@@ -399,7 +400,6 @@ export class SimplexComponent implements OnInit {
     this.iteraciones.push(JSON.parse(JSON.stringify(this.matrix)));
 
     while (this.hayNegativos()) {
-      console.log('Hay negativos')
       this.elementoMenor();
       this.radioMenor();
       if (this.hayInfinidad) break;
