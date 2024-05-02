@@ -65,6 +65,7 @@ export class ModelajeComponent implements OnInit{
       }
       else{
         restriccion.artificial = new Variable('a'+(this.contadorArtificiales),1,0);
+        this.contadorArtificiales++;
       }
       restriccion.valores.forEach((variable) => {
         if(variable.multiplicador === null){

@@ -304,7 +304,7 @@ export class SimplexComponent implements OnInit {
   }
 
   solucionOptima() {
-    let ultimaColumna = this.variables.length + this.restricciones.length + 1;
+    let ultimaColumna = this.variables.length + this.nHolguras + 1;
     let totalFilas = this.restricciones.length + 1;
     for (let i = 0; i < totalFilas; i++) {
       let rhs = this.matrix[i][ultimaColumna - 1];
@@ -331,10 +331,10 @@ export class SimplexComponent implements OnInit {
       let fila = [];
       for (let j = 0; j < totalColumnas; j++) {
 
-        if (i === 0 && !this.idColumnas[j].includes('s') && !this.idColumnas[j].includes('a')) {//Fila -W
+        if (i === 0 && !this.idColumnas[j]?.includes('s') && !this.idColumnas[j]?.includes('a')) {//Fila -W
           fila.push(0);
         }
-        else if (i === 0 && this.idColumnas[j].includes('a')) {//Fila -W, variables Artificiales sin Holguras
+        else if (i === 0 && this.idColumnas[j]?.includes('a')) {//Fila -W, variables Artificiales sin Holguras
           fila.push(1);
         }
         else if (i === 0) {// Fila -W, RHS
