@@ -3,6 +3,7 @@ import { Variable } from '../../modelos/variable.model';
 import { Restricion } from '../../modelos/restriccion.model';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {Decimal} from 'decimal.js';
 
 import { trigger, transition, style, animate } from '@angular/animations';
 
@@ -51,6 +52,8 @@ export class SimplexComponent implements OnInit {
   esFase1 = false;
   comenzoConvertir0Artificiales = false;
 
+  esGranM = false;
+
   mensajes: Array<string> = [];
 
   constructor() {
@@ -70,11 +73,11 @@ export class SimplexComponent implements OnInit {
       let fila = [];
       for (let j = 0; j < totalColumnas; j++) {
 
-        if (i === 0 && j < this.variables.length && this.objetivo==='max') { // Fila de la función objetivo 
+        if (i === 0 && j < this.variables.length && this.objetivo === 'max') { // Fila de la función objetivo 
           let negativo = (this.variables[j].multiplicador || 0) * -1;
           fila.push(negativo);
         }
-        else if (i === 0 && j < this.variables.length && this.objetivo==='min') {
+        else if (i === 0 && j < this.variables.length && this.objetivo === 'min') {
           fila.push(this.variables[j].multiplicador || 0);
         }
         else if (i === 0) {  // Fila de la función objetivo (variables de holgura)
@@ -103,7 +106,7 @@ export class SimplexComponent implements OnInit {
 
 
 
-  llenarTablaIds(esDosFases: boolean) {
+  llenarTablaIds(esDosFases: boolean, esGranM: boolean = false) {
     let totalColumnas = this.variables.length + this.nHolguras + this.nArtificiales + 1;
     let totalFilas = this.restricciones.length + 1;
     if (esDosFases) {
@@ -115,7 +118,7 @@ export class SimplexComponent implements OnInit {
         this.idFilas.push('z');
 
       }
-      else if(i === 0 && !esDosFases && this.objetivo === 'min') {
+      else if (i === 0 && !esDosFases && this.objetivo === 'min') {
         this.idFilas.push('-z');
       }
       else if (i === 0 && esDosFases) {
@@ -124,11 +127,14 @@ export class SimplexComponent implements OnInit {
       else if (i === 1 && esDosFases && this.objetivo === 'max') {
         this.idFilas.push('z');
       }
-      else if(i === 1 && esDosFases && this.objetivo === 'min') {
+      else if (i === 1 && esDosFases && this.objetivo === 'min') {
         this.idFilas.push('-z');
       }
       else if (esDosFases) {
         this.idFilas.push(this.restricciones[i - 2].artificial?.id || this.restricciones[i - 2].holgura?.id || '');
+      }
+      else if (esGranM) {
+        this.idFilas.push(this.restricciones[i - 1].artificial?.id || this.restricciones[i - 1].holgura?.id || '');
       }
       else {
         this.idFilas.push(this.restricciones[i - 1].holgura?.id || '');
@@ -175,7 +181,7 @@ export class SimplexComponent implements OnInit {
 
   elementoMenor() { //Encuentra el elemento menor de la fila 0
     let menor = 0;
-    for (let i = 0; i < this.matrix[0].length-1; i++) {
+    for (let i = 0; i < this.matrix[0].length - 1; i++) {
       if (this.matrix[0][i] < menor) {
         menor = this.matrix[0][i];
         this.variableEntrante = this.idColumnas[i];
@@ -257,8 +263,9 @@ export class SimplexComponent implements OnInit {
       if (i !== fila) {
         let factor = this.matrix[i][columna] * -1;
         for (let j = 0; j < this.matrix[i].length; j++) {
-          this.matrix[i][j] = +(this.matrix[i][j] + (this.matrix[fila][j] * factor)).toPrecision(3);
-
+          let a = new Decimal(this.matrix[i][j]);
+          let b = new Decimal(this.matrix[fila][j]*factor);
+          this.matrix[i][j] = a.plus(b).toDecimalPlaces(3).toNumber();
           if (Math.abs(this.matrix[i][j]) < 0.01) {
             this.matrix[i][j] = 0;
           }
@@ -274,7 +281,7 @@ export class SimplexComponent implements OnInit {
   hayNegativos() {
     let hayNegativos = false;
 
-    for (let i = 0; i < this.matrix[0].length-1; i++) {
+    for (let i = 0; i < this.matrix[0].length - 1; i++) {
       if (this.matrix[0][i] < 0) {
         hayNegativos = true;
         break;
@@ -303,12 +310,13 @@ export class SimplexComponent implements OnInit {
 
   }
 
-  solucionOptima() {
+  solucionOptima(esGranM: boolean = false) {
     let ultimaColumna = this.variables.length + this.nHolguras + 1;
+    if (esGranM) ultimaColumna = this.variables.length + this.nHolguras + this.nArtificiales + 1;
     let totalFilas = this.restricciones.length + 1;
     for (let i = 0; i < totalFilas; i++) {
       let rhs = this.matrix[i][ultimaColumna - 1];
-      if(this.objetivo === 'min' && i===0) rhs = rhs * -1;
+      if (this.objetivo === 'min' && i === 0) rhs = rhs * -1;
       this.resultados.push(rhs);
     }
   }
@@ -327,6 +335,7 @@ export class SimplexComponent implements OnInit {
     let totalFilas = this.restricciones.length + 2; // +2 por la fila de la función objetivo y la fila W
     let totalColumnas = this.variables.length + this.nHolguras + this.nArtificiales + 1; // +1 por la columna de resultados (RHS)
     let matrix = [];
+
     for (let i = 0; i < totalFilas; i++) {
       let fila = [];
       for (let j = 0; j < totalColumnas; j++) {
@@ -345,7 +354,7 @@ export class SimplexComponent implements OnInit {
           fila.push(negativo);
         }
         else if (i === 1 && j < this.variables.length && this.objetivo === 'min') {//Fila Z
-          let valor = (this.variables[j].multiplicador || 0) ;
+          let valor = (this.variables[j].multiplicador || 0);
           fila.push(valor);
         }
         else if (i === 1 && j >= this.variables.length && j < totalColumnas) {//Fila Z, variables de holgura, artificiales y RHS
@@ -395,7 +404,6 @@ export class SimplexComponent implements OnInit {
         this.fase2();
       }
       else {
-        console.log('No es factible');
         this.esInfactible = true;
       }
     }
@@ -430,7 +438,7 @@ export class SimplexComponent implements OnInit {
     }
     if (!this.hayInfinidad) this.solucionOptima();
 
-    
+
   }
 
   esFactible(): boolean {
@@ -456,7 +464,68 @@ export class SimplexComponent implements OnInit {
   }
 
   granM() {
+    this.esGranM = true;
+    this.llenarTablaIds(false, true);
+    this.matrix = this.matrixGranM();
+    this.inicialMatrix = JSON.parse(JSON.stringify(this.matrix));
+    this.convierteArtificalesEnCero();
 
+    while (this.hayNegativos()) {
+      this.elementoMenor();
+      this.radioMenor();
+      if (this.hayInfinidad) break;
+      this.conviertePivoteEnUno();
+      this.convierteRestoEnCero();
+
+    }
+    if (!this.hayInfinidad) this.solucionOptima(true);
+
+  }
+
+  matrixGranM(): number[][] {
+    let totalFilas = this.restricciones.length + 1; // +1 por la fila de la función objetivo
+    let totalColumnas = this.variables.length + this.nHolguras + this.nArtificiales + 1; // +1 por la columna de resultados (RHS)
+    let matrix = [];
+
+    for (let i = 0; i < totalFilas; i++) {
+      let fila = [];
+      for (let j = 0; j < totalColumnas; j++) {
+        if (i === 0 && j < this.variables.length && this.objetivo === 'max') {
+          let negativo = (this.variables[j].multiplicador || 0) * -1;
+          fila.push(negativo);
+        }
+        else if (i === 0 && j < this.variables.length && this.objetivo === 'min') {
+          fila.push(this.variables[j].multiplicador || 0);
+        }
+        else if (i === 0 && this.idColumnas[j]?.includes('s')) {
+          fila.push(0);
+        }
+        else if (i === 0 && this.idColumnas[j]?.includes('a')) {
+          fila.push(10000);
+        }
+        else if (i === 0 && j === totalColumnas - 1) {
+          fila.push(0);
+        }
+        else if (i > 0 && j < this.variables.length) { //variables de las restricciones
+          fila.push(this.restricciones[i - 1].valores[j].multiplicador || 0);
+        }
+        else if (i > 0 && j === this.variables.length + (i - 1) && this.nHolguras > 0) { //variables de holgura
+          fila.push(this.restricciones[i - 1].holgura?.valor || 0);
+        }
+        else if (i > 0 && this.idFilas[i] === this.idColumnas[j]) { //variables artificiales
+          fila.push(1);
+        }
+        else if (i > 0 && j === totalColumnas - 1) { //RHS
+          fila.push(this.restricciones[i - 1].resultado || 0);
+        }
+        else {
+          fila.push(0);
+        }
+
+      }
+      matrix.push(fila);
+    }
+    return matrix;
   }
 
   ngOnInit() {
@@ -474,7 +543,7 @@ export class SimplexComponent implements OnInit {
       this.simplex();
     }
     if (!hayArtificiales && this.metodo === 'M') {
-
+      this.simplex();
     }
     if (hayArtificiales && this.metodo === 'Fases') {
       this.dosFases();
@@ -482,6 +551,7 @@ export class SimplexComponent implements OnInit {
     if (hayArtificiales && this.metodo === 'M') {
       this.granM();
     }
+
 
 
   }
