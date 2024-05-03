@@ -60,11 +60,32 @@ export class ModelajeComponent implements OnInit{
 
   }
 
+  transformarVariable(variable:Variable){
+    if(this.variablesLibres.includes(variable.id)){
+      let idOriginal = variable.id; 
+      variable.id = variable.id + 'p';
+      const multiplicador = variable.multiplicador !== null ? variable.multiplicador : 1;
+      this.variables.push(new Variable((variable.id+'p'), 0, (multiplicador * -1)));
+
+      this.restricciones.forEach((restriccion) => {
+        restriccion.valores.forEach((variable) => {
+          if(variable.id === idOriginal){
+            variable.id = variable.id + 'p';
+            const multiplicador = variable.multiplicador !== null ? variable.multiplicador : 1;
+          
+            restriccion.valores.push(new Variable((variable.id+'p'), 0, (multiplicador*-1)));
+          }
+        });
+      });
+    }
+  }
+
   onSubmit() {
     this.variables.forEach((variable) => {
       if(variable.multiplicador === null){
         variable.multiplicador = 0;
       }
+      this.transformarVariable(variable);
     });
     this.restricciones.forEach((restriccion) => {
       if(restriccion.operador === '<='){
@@ -91,6 +112,7 @@ export class ModelajeComponent implements OnInit{
         }
       });
     });
+    console.log(this.variables);
      console.log(this.restricciones);
     this.modelajeAprobado = true;
 
