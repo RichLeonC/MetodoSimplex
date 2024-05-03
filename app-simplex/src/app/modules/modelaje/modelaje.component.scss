@@ -87,6 +87,18 @@ h4 {
     background-color: hsl(195, 85%, 55%);
 }
 
+.btn-secondary{
+    background-color: transparent;
+    border-color: hsl(195, 85%, 41%);
+    color: #e1e6eb;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.btn-secondary:hover{
+    background-color: hsl(195, 85%, 41%);
+}
+
 .label-negatividad{
     color: #e1e6eb;
     font-size: 1.5rem;

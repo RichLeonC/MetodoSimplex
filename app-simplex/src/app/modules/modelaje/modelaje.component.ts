@@ -28,6 +28,10 @@ export class ModelajeComponent implements OnInit{
   contador = 1;
   contadorArtificiales = 1;
 
+  variablesDisponibles: Array<string> = [];
+  variablesLibres: Array<string> = [];
+  variableSeleccionada: string = '';
+
   constructor(private fb: FormBuilder) {
     this.formModelaje = this.fb.group({});
   }
@@ -43,6 +47,17 @@ export class ModelajeComponent implements OnInit{
 
   addVariable() {
     this.getVariables().push(this.fb.control(''));
+  }
+
+  addVariableLibre(v: string) {
+    if(this.variablesDisponibles.length>0){
+      this.variablesLibres.push(v);
+      this.variablesDisponibles = this.variablesDisponibles.filter((variable) => variable !== v);
+      this.variableSeleccionada = this.variablesDisponibles[0];
+    }
+
+
+
   }
 
   onSubmit() {
@@ -90,6 +105,7 @@ export class ModelajeComponent implements OnInit{
 
     for(let i = 0; i < nVariables; i++){
       this.variables.push(new Variable('x' + (i+1), 0, null));
+      this.variablesDisponibles.push('x' + (i+1));
       this.contador++;
     }
 
@@ -98,6 +114,10 @@ export class ModelajeComponent implements OnInit{
       let variablesCopia = JSON.parse(JSON.stringify(this.variables)); //Copia de las variables
         // this.restricciones.push(new Restricion(i, variablesCopia, '<=', null,new Variable('s'+(nVariables+i+1),1,0)));
         this.restricciones.push(new Restricion(i, variablesCopia, '<=', null,null,null));
+    }
+
+    if(this.variablesDisponibles.length>0){
+      this.variableSeleccionada = this.variablesDisponibles[0];
     }
 
 

@@ -66,9 +66,34 @@
                     </div>
                     <div class="row mt-4">
                         <div class="d-flex align-items-center ml-3">
-                            <div *ngFor="let variable of variables; let i = index; let isLast = last">
-                                <label class="label-negatividad" *ngIf="!isLast">{{variable.id}}, </label>
-                                <label class="label-negatividad" *ngIf="isLast">{{variable.id}} >= 0</label>
+                            <div *ngFor="let variable of variablesDisponibles; let i = index; let isLast = last">
+                                <label class="label-negatividad" *ngIf="!isLast">{{variable}}, </label>
+                                <label class="label-negatividad" *ngIf="isLast">{{variable}} >= 0</label>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="list-group-item mb-3">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <h3>Variables libres</h3>
+                        </div>
+                        <div class="col-md-2 col-2">
+                            <select class="form-select" [(ngModel)]="variableSeleccionada" name="variableS">
+                                <option *ngFor="let v of variablesDisponibles" value="{{v}}">{{v}}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-secondary" (click)="addVariableLibre(variableSeleccionada)">Agregar Variable</button>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="d-flex align-items-center ml-3">
+                            <div *ngFor="let variable of variablesLibres; let i = index; let isLast = last">
+                                <label class="label-negatividad" *ngIf="i===0">-INF <= </label>
+                                <label class="label-negatividad" *ngIf="!isLast">{{variable}}, </label>
+                                <label class="label-negatividad" *ngIf="isLast">{{variable}} <= +INF</label>
                             </div>
                         </div>
                     </div>
