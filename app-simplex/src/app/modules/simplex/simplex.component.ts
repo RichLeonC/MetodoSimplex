@@ -44,6 +44,7 @@ export class SimplexComponent implements OnInit {
 
   hayInfinidad = false;
   esInfactible = false;
+  esInfactibleGranM = false;
 
   nArtificiales = 0;
   nHolguras = 0;
@@ -451,6 +452,16 @@ export class SimplexComponent implements OnInit {
     return factible;
   }
 
+  esFactibleGranM(): boolean {
+    let factible = true;
+    this.idFilas.forEach(e => {
+      if (e.includes('a') && this.resultados[this.idFilas.indexOf(e)] !== 0) {
+        factible = false;
+      }
+    });
+    return factible;
+  }
+
   convierteArtificalesEnCero() {
     this.comenzoConvertir0Artificiales = true;
     for (let i = 0; i < this.nArtificiales; i++) {
@@ -478,7 +489,14 @@ export class SimplexComponent implements OnInit {
       this.convierteRestoEnCero();
 
     }
-    if (!this.hayInfinidad) this.solucionOptima(true);
+    if (!this.hayInfinidad){
+      if(this.esFactibleGranM()){
+        this.solucionOptima(true);
+      }
+      else{
+        this.esInfactibleGranM = true;
+      }
+    } 
 
   }
 
