@@ -65,15 +65,20 @@ export class ModelajeComponent implements OnInit{
       let idOriginal = variable.id; 
       variable.id = variable.id + 'p';
       const multiplicador = variable.multiplicador !== null ? variable.multiplicador : 1;
-      this.variables.push(new Variable((variable.id+'p'), 0, (multiplicador * -1)));
+      let newVariable = new Variable((variable.id+'p'), 0, (multiplicador * -1));
+      let index = this.variables.findIndex(v => v.id === variable.id);
+      this.variables.splice(index+1,0,newVariable);
+      //this.variables.push(new Variable((variable.id+'p'), 0, (multiplicador * -1)));
 
       this.restricciones.forEach((restriccion) => {
         restriccion.valores.forEach((variable) => {
           if(variable.id === idOriginal){
             variable.id = variable.id + 'p';
             const multiplicador = variable.multiplicador !== null ? variable.multiplicador : 1;
-          
-            restriccion.valores.push(new Variable((variable.id+'p'), 0, (multiplicador*-1)));
+            let newVariable = new Variable((variable.id+'p'), 0, (multiplicador*-1));
+            let index = restriccion.valores.findIndex(v => v.id === variable.id);
+            restriccion.valores.splice(index+1,0,newVariable);
+            //restriccion.valores.push(new Variable((variable.id+'p'), 0, (multiplicador*-1)));
           }
         });
       });
