@@ -14,3 +14,5 @@ Pasos de instalación:
 4. Correr la aplicación: ng serve
 
 5. Se abrirá por defecto en el puerto 4200.
+
+Aplicación desplegada: https://simplex-richardleonc.netlify.app/
