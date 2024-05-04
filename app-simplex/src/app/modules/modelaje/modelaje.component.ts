@@ -68,7 +68,6 @@ export class ModelajeComponent implements OnInit{
       let newVariable = new Variable((variable.id+'p'), 0, (multiplicador * -1));
       let index = this.variables.findIndex(v => v.id === variable.id);
       this.variables.splice(index+1,0,newVariable);
-      //this.variables.push(new Variable((variable.id+'p'), 0, (multiplicador * -1)));
 
       this.restricciones.forEach((restriccion) => {
         restriccion.valores.forEach((variable) => {
@@ -78,7 +77,6 @@ export class ModelajeComponent implements OnInit{
             let newVariable = new Variable((variable.id+'p'), 0, (multiplicador*-1));
             let index = restriccion.valores.findIndex(v => v.id === variable.id);
             restriccion.valores.splice(index+1,0,newVariable);
-            //restriccion.valores.push(new Variable((variable.id+'p'), 0, (multiplicador*-1)));
           }
         });
       });
@@ -117,8 +115,6 @@ export class ModelajeComponent implements OnInit{
         }
       });
     });
-    console.log(this.variables);
-     console.log(this.restricciones);
     this.modelajeAprobado = true;
 
   }

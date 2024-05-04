@@ -26,7 +26,6 @@ export class AppComponent implements OnInit{
 
   onSubmit() {
     if(this.form.valid){
-      console.log(this.form.value);
       this.isSubmitted = true;
       this.key++;
     }
