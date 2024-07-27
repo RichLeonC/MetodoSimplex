@@ -1,6 +1,6 @@
 # Calculadora de Método Simplex
 
-**Elaborado por**: Richard León Chinchilla 2019003759.
+**Elaborado por**: Richard León Chinchilla.
 
 Tarea programada de Investigación de Operaciones. 
 Realizar una aplicación que resuelva ejercicios de programación lineal mediante modelaje con el método simplex.
