@@ -1,9 +1,12 @@
-# MetodoSimplex
+# Calculadora de Método Simplex
 
-Elaborado por: Richard León Chinchilla 2019003759
-Tarea programada de Investigación de Operaciones. Realizar una aplicación que resuelva ejercicios de programación lineal como modelaje con el método simplex.
+**Elaborado por**: Richard León Chinchilla 2019003759.
 
-Pasos de instalación:
+Tarea programada de Investigación de Operaciones. 
+Realizar una aplicación que resuelva ejercicios de programación lineal mediante modelaje con el método simplex.
+Es capaz de resolver usando método Dos Fases y la Gran M.
+
+**Pasos de instalación**:
 
 1. Tener instalado en la computadora Node.js
 
@@ -15,4 +18,4 @@ Pasos de instalación:
 
 5. Se abrirá por defecto en el puerto 4200.
 
-Aplicación desplegada: https://simplex-richardleonc.netlify.app/
+**Aplicación desplegada**: https://simplex-richardleonc.netlify.app/
